@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/app.min.css">
+
+</head>
+<body>
+    <div class="container">
+        <div class="row m-t-xxl">
+            <div class="col-sm-12 text-center">
+                <button class="btn btn-success m-r-md" @click="sendMsg('open')">打开</button>
+                <button class="btn btn-danger" @click="sendMsg('close')">关闭</button>
+            </div>
+            <div class="col-sm-12 text-center m-t-lg">
+                <input type="text" class="form-control" v-model="msg">
+                <button type="button" class="btn btn-info m-t-md" @click="sendMsg(msg)">发送其他消息</button>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="js/vue.js"></script>
+<script src="socket.io.js"></script>
+<script type="text/javascript">
+    var socket;
+    new Vue({
+        el:".container",
+        data:{
+            remoteUrl:'http://setting.applinzi.com/',
+            msg:''
+        },
+        methods:{
+            sendMsg:function(data){
+                if(data){
+                    socket.emit('msg', data);
+                }
+            }
+        },
+        mounted:function(){
+            socket  = io.connect(this.remoteUrl);
+            socket.on('accept', function (msg) {
+                console.log('服务端返回:',msg)
+            })
+        }
+    });
+</script>
+</html>
